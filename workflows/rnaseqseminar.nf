@@ -28,8 +28,11 @@ workflow RNASEQSEMINAR {
     ch_versions      = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // Reference file channels
-    ch_star_index    = Channel.value(file(params.star_index))
+    // Reference channels as tuples (for STAR, DUPRADAR, QUALIMAP)
+    ch_star_index    = Channel.value([[id:'star_index'], file(params.star_index)])
+    ch_gtf_tuple     = Channel.value([[id:'gtf'],        file(params.gtf)])
+
+    // Reference channels as plain paths (for SALMON)
     ch_salmon_index  = Channel.value(file(params.salmon_index))
     ch_gtf           = Channel.value(file(params.gtf))
     ch_transcriptome = Channel.value(file(params.transcriptome))
@@ -39,14 +42,14 @@ workflow RNASEQSEMINAR {
     //
     FASTQC(ch_samplesheet)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions      = ch_versions.mix(FASTQC.out.versions.first())
+    // ch_versions   = ch_versions.mix(FASTQC.out.versions.first())
 
     //
     // MODULE: TRIMGALORE
     //
     TRIMGALORE(ch_samplesheet)
     ch_multiqc_files = ch_multiqc_files.mix(TRIMGALORE.out.zip.collect{it[1]})
-    ch_versions      = ch_versions.mix(TRIMGALORE.out.versions.first())
+    // ch_versions   = ch_versions.mix(TRIMGALORE.out.versions.first())
 
     //
     // MODULE: STAR_ALIGN
@@ -54,13 +57,11 @@ workflow RNASEQSEMINAR {
     STAR_ALIGN(
         TRIMGALORE.out.reads,
         ch_star_index,
-        ch_gtf,
-        false,
-        '',
-        ''
+        ch_gtf_tuple,
+        false
     )
     ch_multiqc_files = ch_multiqc_files.mix(STAR_ALIGN.out.log_final.collect{it[1]})
-    ch_versions      = ch_versions.mix(STAR_ALIGN.out.versions.first())
+    // ch_versions   = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
     //
     // MODULE: SALMON_QUANT
@@ -73,14 +74,14 @@ workflow RNASEQSEMINAR {
         false,
         'A'
     )
-    ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
+    // ch_versions   = ch_versions.mix(SALMON_QUANT.out.versions.first())
 
     //
     // MODULE: DUPRADAR
     //
     DUPRADAR(
         STAR_ALIGN.out.bam,
-        ch_gtf
+        ch_gtf_tuple
     )
     ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{it[1]})
 
@@ -89,7 +90,7 @@ workflow RNASEQSEMINAR {
     //
     QUALIMAP_RNASEQ(
         STAR_ALIGN.out.bam,
-        ch_gtf
+        ch_gtf_tuple
     )
 
     //
