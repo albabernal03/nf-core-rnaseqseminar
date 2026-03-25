@@ -57,4 +57,12 @@ Prepare a samplesheet (`samplesheet.csv`) with the following format:
 
 ```csv
 sample,fastq_1,fastq_2
-SAMPLE_1,reads_1.fastq.gz,reads_2.fastq.gz ```
+SAMPLE_1,reads_1.fastq.gz,reads_2.fastq.gz
+
+## Run the pipeline
+
+```bash
+nextflow run albabernal03/nf-core-rnaseqseminar \
+   -profile test,singularity \
+   --input assets/samplesheet_seminar.csv \
+   --outdir results
