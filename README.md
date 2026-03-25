@@ -59,6 +59,7 @@ Prepare a samplesheet (`samplesheet.csv`) with the following format:
 sample,fastq_1,fastq_2
 SAMPLE_1,reads_1.fastq.gz,reads_2.fastq.gz
 ```
+---
 
 ## Run the pipeline
 
@@ -67,4 +68,28 @@ nextflow run albabernal03/nf-core-rnaseqseminar \
    -profile test,singularity \
    --input assets/samplesheet_seminar.csv \
    --outdir results
+```
+---
+## Output
+
+The pipeline generates:
+
+- Quality control reports (FastQC, MultiQC)  
+- Alignment files (BAM)  
+- Transcript quantification results (Salmon)  
+- Duplication and alignment QC metrics  
+- Execution reports and logs  
+
+Example output structure:
+
+```bash
+results/
+├── fastqc/
+├── trimgalore/
+├── star/
+├── salmon/
+├── dupradar/
+├── qualimap/
+├── multiqc/
+└── pipeline_info/
 ```
