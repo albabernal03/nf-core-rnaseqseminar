@@ -93,3 +93,56 @@ results/
 ├── multiqc/
 └── pipeline_info/
 ```
+
+---
+## Results
+
+A MultiQC report is generated automatically:
+
+```bash
+results/multiqc/multiqc_report.html
+```
+This report aggregates all quality control metrics and provides an overview of data quality and pipeline performance.
+
+---
+## Version Control
+
+The pipeline is available on GitHub:
+
+https://github.com/albabernal03/nf-core-rnaseqseminar
+
+This ensures:
+
+- Reproducibility  
+- Version tracking  
+- Easy sharing and reuse  
+
+The pipeline can also be executed directly from GitHub using Nextflow:
+
+```bash
+nextflow run albabernal03/nf-core-rnaseqseminar \
+  -profile test,singularity \
+  --input samplesheet.csv \
+  --outdir results
+  ```
+  ---
+  
+## Credits
+
+nf-core/rnaseqseminar was developed by **Alba Bernal** as part of the BI764A course project.
+
+---
+
+## Contributions and Support
+
+For help or contributions, please open an issue on GitHub.
+
+---
+
+## Citations
+
+If you use this pipeline, please cite:
+
+> The nf-core framework for community-curated bioinformatics pipelines.  
+> Nat Biotechnol. 2020.  
+> https://doi.org/10.1038/s41587-020-0439-x
